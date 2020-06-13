@@ -229,9 +229,9 @@ def mse_cluster_prediction(cpu_data, input_arima_order, past_error):
     for index, machine_index in enumerate(cpu_data.columns):
         cluster_prediction[machine_index] = general_model_prediction + rolling_error[machine_index]
         
-    return cluster_prediction    
+    return cluster_prediction, general_model_prediction
 
-def mse_predictions(cpu_data, number_of_cluster = 50, start_time = 288, end_time = None, past_error_range = 2, rolling_cluster_window = 3):
+def mse_predictions(cpu_data, number_of_cluster = 50, start_time = 288, end_time = None, past_error_range = 1, rolling_cluster_window = 3):
 
     ''' high level function for making predictons using the tuor framework
 
@@ -268,20 +268,24 @@ def mse_predictions(cpu_data, number_of_cluster = 50, start_time = 288, end_time
 
             # initialise dict for machine to prediction in current timestep
             curr_all_machine_pred = {}
+            curr_general_pred = {}
 
             for ls_machine_in_cluster in cluster.values():
                 
                 # make predictions for all machine in each cluster
-                cluster_predictions = mse_cluster_prediction(cpu_data = cpu_data[ls_machine_in_cluster], 
+                cluster_predictions, general_prediction = mse_cluster_prediction(cpu_data = cpu_data[ls_machine_in_cluster], 
                                                              input_arima_order = (3,0,0), 
                                                              past_error = df_past_error[ls_machine_in_cluster])
                 
                 # curr_all_machine_pred is a dict with key = machine, value = current timestep prediction
                 curr_all_machine_pred = {**curr_all_machine_pred, **cluster_predictions}
+                
+                for machine_index in ls_machine_in_cluster:
+                    curr_general_pred[machine_index] = general_prediction
 
             # update df_past_error with most updated time index
             # start by getting the current error
-            curr_all_machine_error = cpu_data.iloc[current_time] - pd.DataFrame(curr_all_machine_pred, index = [current_time])
+            curr_all_machine_error = cpu_data.iloc[current_time] - pd.DataFrame(curr_general_pred, index = [current_time])
             
             df_past_error = df_past_error.append(curr_all_machine_error, 
                                                  ignore_index = True)
@@ -293,7 +297,7 @@ def mse_predictions(cpu_data, number_of_cluster = 50, start_time = 288, end_time
             all_predictions = all_predictions.append(current_df, sort = True)
         
     return all_predictions
-
+    
 ################################################### brut4e force method ###################################################
 
 def one_timeseries_one_model(cpu_data, start_time, end_time):
