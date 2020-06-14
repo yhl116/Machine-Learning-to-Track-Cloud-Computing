@@ -2,7 +2,7 @@
 This is a MEng Electrical & Electronics Engineering Final Year Project for Imperial College London. It outlines a correlation based one-step forecasting model for cloud resource utilisation.
 
 ### Dataset
-The dataset used is Google trace data (version 2) which consists of measures of of CPU utilisation and memory utilisation of 12,476 machines. Each machine is sampled for about 29 days at 5 minutes interval. The total number of samples per machine in ...
+The dataset used is Google trace data (version 2) which consists of measures of of CPU utilisation and memory utilisation of 12,476 machines. Each machine is sampled for about 29 days at 5 minutes interval. The total number of samples per machine is 8350.
 
 ### Proposed Framework Overview
 The proposed correlation based framework consists of four parts:
