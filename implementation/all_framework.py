@@ -89,7 +89,7 @@ def get_cluster_predictions(cpu_data, curr_time_segment, cluster_corr_matrix, in
         
     return cluster_prediction    
 
-def corr_predictions(cpu_data, window = 6, number_of_cluster = 50, start_time = 288, end_time = None, rolling_error_window = 0):
+def corr_predictions(cpu_data, window = 5, number_of_cluster = 100, start_time = 288, end_time = None, rolling_error_window = 0):
 
     ''' high level function for making correlation based single-step predictions
 
